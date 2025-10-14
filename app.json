@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "PrimeCare Collection Center",
+    "slug": "primecare-collection-center-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "platforms": ["ios", "android"],
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#4ECDC4"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "PrimeCare needs location access to provide accurate pickup locations for medical sample collection.",
+        "NSCameraUsageDescription": "PrimeCare needs camera access to scan QR codes for sample verification."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4ECDC4"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA"
+      ]
+    }
+  }
+}

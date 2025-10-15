@@ -238,7 +238,7 @@ const CenterProfileScreen: React.FC<CenterProfileScreenProps> = ({
           text: 'Contact Support',
           onPress: () => {
             // In future, this could open support contact options
-            Alert.alert('Support', 'Please call: +94 11 XXX XXXX\nEmail: support@primecare.lk');
+            Alert.alert('Support', 'Please call: +94 77 788 4049\nEmail: transfleet.primecare@gmail.com');
           }
         }
       ]

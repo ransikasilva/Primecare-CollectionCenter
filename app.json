@@ -31,7 +31,13 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "CAMERA"
-      ]
+      ],
+      "package": "com.transfleet.primecarecollectioncenterapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e1b72c24-c761-47ee-86b8-6009cd2262e9"
+      }
     }
   }
 }

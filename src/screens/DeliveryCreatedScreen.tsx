@@ -126,15 +126,15 @@ const DeliveryCreatedScreen: React.FC<DeliveryCreatedScreenProps> = ({
       const profileResponse = await profileService.getProfile();
       if (profileResponse.success && profileResponse.data) {
         setSupportContacts({
-          support: profileResponse.data.phone || '',
+          support: '+94 77 788 4049',
           hospital: deliveryData.hospital_info?.phone || ''
         });
       }
     } catch (error) {
       console.error('Failed to load support contacts:', error);
-      // Set empty fallback values
+      // Set fallback to real contact values
       setSupportContacts({
-        support: '',
+        support: '+94 77 788 4049',
         hospital: ''
       });
     }

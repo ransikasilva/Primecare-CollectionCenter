@@ -173,8 +173,8 @@ const DeliveryCompletedScreen: React.FC<DeliveryCompletedScreenProps> = ({
       'Choose how you\'d like to contact support:',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Call Support', onPress: () => Linking.openURL('tel:+94112456789') },
-        { text: 'WhatsApp', onPress: () => Linking.openURL('whatsapp://send?phone=94112456789') },
+        { text: 'Call Support', onPress: () => Linking.openURL('tel:+94777884049') },
+        { text: 'WhatsApp', onPress: () => Linking.openURL('whatsapp://send?phone=94777884049') },
       ]
     );
   };

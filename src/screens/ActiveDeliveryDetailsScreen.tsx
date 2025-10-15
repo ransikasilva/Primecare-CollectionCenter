@@ -446,7 +446,7 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Report', style: 'destructive', onPress: () => {
-          handleCall('+94 11 PRIMECARE');
+          handleCall('+94 77 788 4049');
         }},
       ]
     );
@@ -723,7 +723,7 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
 
         <TouchableOpacity
           style={styles.secondaryActionButton}
-          onPress={() => handleCall('+94 11 245 6789')}
+          onPress={() => handleCall('+94 77 788 4049')}
         >
           <Building2 size={16} color={COLORS.primary} />
           <Text style={styles.secondaryActionText}>Call Hospital Lab</Text>
@@ -748,9 +748,9 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
       </View>
       <TouchableOpacity
         style={styles.emergencyContactItem}
-        onPress={() => handleCall('+94 11 PRIMECARE')}
+        onPress={() => handleCall('+94 77 788 4049')}
       >
-        <Text style={styles.emergencyContactText}>+94 11 PRIMECARE</Text>
+        <Text style={styles.emergencyContactText}>+94 77 788 4049</Text>
       </TouchableOpacity>
     </View>
   );

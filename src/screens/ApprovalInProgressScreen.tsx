@@ -217,22 +217,22 @@ const ApprovalInProgressScreen: React.FC<ApprovalInProgressScreenProps> = ({
         <View style={styles.questionsContainer}>
           <Text style={styles.questionsTitle}>Questions about your application?</Text>
           
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.contactButton}
-            onPress={() => handleCall('+94 11 234 5678')}
+            onPress={() => handleCall('+94 77 788 4049')}
             activeOpacity={0.8}
           >
             <Phone size={20} color={COLORS.primary} />
-            <Text style={styles.contactButtonText}>+94 11 234 5678</Text>
+            <Text style={styles.contactButtonText}>+94 77 788 4049</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.contactButton}
-            onPress={() => handleEmail('support@primecare.lk')}
+            onPress={() => handleEmail('transfleet.primecare@gmail.com')}
             activeOpacity={0.8}
           >
             <Mail size={20} color={COLORS.primary} />
-            <Text style={styles.contactButtonText}>support@primecare.lk</Text>
+            <Text style={styles.contactButtonText}>transfleet.primecare@gmail.com</Text>
           </TouchableOpacity>
 
           <View style={styles.officeHours}>

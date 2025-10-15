@@ -10,8 +10,8 @@ class ApiClient {
     // Use environment-specific URLs
     // For Expo development, use your computer's local IP instead of localhost
     this.baseURL = __DEV__
-      ? 'http://192.168.1.4:8000/api'  // Development - use your local network IP (backend runs on port 8000)
-      : 'https://api.primecare.lk/api'; // Production
+      ? 'https://muxxr5mptd.ap-south-1.awsapprunner.com/api'  // Development - use deployed backend for screenshots
+      : 'https://muxxr5mptd.ap-south-1.awsapprunner.com/api'; // Production
 
     this.client = axios.create({
       baseURL: this.baseURL,

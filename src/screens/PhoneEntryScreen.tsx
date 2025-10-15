@@ -192,19 +192,6 @@ const PhoneEntryScreen: React.FC<PhoneEntryScreenProps> = ({
           </Text>
         </TouchableOpacity>
 
-        {/* Development Bypass Button */}
-        {__DEV__ && (
-          <TouchableOpacity
-            style={styles.bypassButton}
-            onPress={handleBypassLogin}
-            disabled={isLoading}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.bypassButtonText}>
-              Dev: Bypass Login
-            </Text>
-          </TouchableOpacity>
-        )}
       </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

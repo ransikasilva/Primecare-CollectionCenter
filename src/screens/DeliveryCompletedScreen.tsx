@@ -128,17 +128,21 @@ const DeliveryCompletedScreen: React.FC<DeliveryCompletedScreenProps> = ({
         const transformedData: DeliveryData = {
           deliveryId: order.order_number,
           hospitalName: order.hospital_name || 'Hospital',
-          hospitalDepartment: order.hospital_department || 'Reception',
+          hospitalDepartment: (order as any).hospital_department || 'Reception',
           completedAt: completedAtFormatted,
           totalTime: totalTimeFormatted,
           receivedBy: 'hospital staff',
           riderInfo: {
             name: order.rider_info?.name || order.rider_name || 'Rider',
-            vehicle: order.rider_info?.vehicle || `Vehicle ${order.rider_id?.slice(-4) || 'N/A'}`,
+            vehicle: typeof order.rider_info?.vehicle === 'string'
+              ? order.rider_info.vehicle
+              : order.rider_info?.vehicle?.type
+                ? `${order.rider_info.vehicle.type} - ${order.rider_info.vehicle.registration}`
+                : `Vehicle ${order.rider_id?.slice(-4) || 'N/A'}`,
             rating: order.rider_info?.rating || 4.5,
           },
           hospitalConfirmed: {
-            staffName: deliveredStatus?.updated_by || order.hospital_contact_person || 'Hospital Staff',
+            staffName: deliveredStatus?.updated_by || (order as any).hospital_contact_person || 'Hospital Staff',
             position: 'Lab Technician',
             confirmedAt: timeString,
           },

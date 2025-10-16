@@ -139,11 +139,28 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
 
         setOrderData(order);
 
-        // Update location state with real coordinates
-        const pickupLat = order.locations?.pickup?.lat || (order as any).pickup_location_lat;
-        const pickupLng = order.locations?.pickup?.lng || (order as any).pickup_location_lng;
-        const deliveryLat = order.locations?.delivery?.lat || (order as any).delivery_location_lat;
-        const deliveryLng = order.locations?.delivery?.lng || (order as any).delivery_location_lng;
+        // Update location state with real coordinates - safe access
+        let pickupLat = 6.9147; // Default Colombo coordinates
+        let pickupLng = 79.8731;
+        let deliveryLat = 6.9236;
+        let deliveryLng = 79.8581;
+
+        try {
+          pickupLat = parseFloat(order.locations?.pickup?.lat ||
+                       (order as any).pickup_location_lat ||
+                       (order as any).pickup_location?.lat || pickupLat);
+          pickupLng = parseFloat(order.locations?.pickup?.lng ||
+                        (order as any).pickup_location_lng ||
+                        (order as any).pickup_location?.lng || pickupLng);
+          deliveryLat = parseFloat(order.locations?.delivery?.lat ||
+                         (order as any).delivery_location_lat ||
+                         (order as any).delivery_location?.lat || deliveryLat);
+          deliveryLng = parseFloat(order.locations?.delivery?.lng ||
+                          (order as any).delivery_location_lng ||
+                          (order as any).delivery_location?.lng || deliveryLng);
+        } catch (error) {
+          console.error('Error parsing coordinates:', error);
+        }
 
         setLocationState(prev => ({
           ...prev,
@@ -212,8 +229,8 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
 
         if (trackingResponse.success && trackingResponse.data) {
           const trackingData = trackingResponse.data;
-          const riderLat = trackingData.rider_location?.lat || trackingData.rider_current_location?.lat;
-          const riderLng = trackingData.rider_location?.lng || trackingData.rider_current_location?.lng;
+          const riderLat = trackingData.rider_location?.lat || (trackingData as any).rider_current_location?.lat;
+          const riderLng = trackingData.rider_location?.lng || (trackingData as any).rider_current_location?.lng;
 
           console.log('📍 Rider location:', { lat: riderLat, lng: riderLng });
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PrimeCare Collection Center",
+    "name": "TransFleet",
     "slug": "primecare-collection-center-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,8 +12,9 @@
       "android"
     ],
     "splash": {
+      "image": "./assets/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#4ECDC4"
+      "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
@@ -26,7 +27,6 @@
       "adaptiveIcon": {
         "backgroundColor": "#4ECDC4"
       },
-      "edgeToEdgeEnabled": true,
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",

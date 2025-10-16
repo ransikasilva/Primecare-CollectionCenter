@@ -6,10 +6,11 @@ import {
   StatusBar,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
+
   Alert,
   Linking,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   ArrowLeft,
   Trophy,

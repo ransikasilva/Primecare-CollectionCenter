@@ -9,8 +9,8 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, Shield, Zap } from 'lucide-react-native';
 import { COLORS, TYPOGRAPHY, SPACING, SHADOWS } from '../theme/design-system';
 import { authService } from '../services/authService';

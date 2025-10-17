@@ -10,7 +10,7 @@ class ApiClient {
     // Use environment-specific URLs
     // For Expo development, use your computer's local IP instead of localhost
     this.baseURL = __DEV__
-      ? 'https://muxxr5mptd.ap-south-1.awsapprunner.com/api'  // Development - use deployed backend for screenshots
+      ? 'https://muxxr5mptd.ap-south-1.awsapprunner.com/api'  // Development - use deployed backend
       : 'https://muxxr5mptd.ap-south-1.awsapprunner.com/api'; // Production
 
     this.client = axios.create({

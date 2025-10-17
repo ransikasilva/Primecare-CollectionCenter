@@ -584,25 +584,6 @@ const CenterProfileScreen: React.FC<CenterProfileScreenProps> = ({
                 )}
               </View>
 
-              {/* Language */}
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Language</Text>
-
-                <View style={styles.languageContainer}>
-                  <TouchableOpacity style={[styles.languageOption, styles.languageOptionSelected]}>
-                    <Text style={[styles.languageText, styles.languageTextSelected]}>English</Text>
-                    <View style={styles.languageRadio}>
-                      <View style={styles.languageRadioSelected} />
-                    </View>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.languageOption}>
-                    <Text style={styles.languageText}>සිංහල</Text>
-                    <View style={styles.languageRadio} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
               {/* Sign Out */}
               <TouchableOpacity style={styles.signOutButton} onPress={onSignOut}>
                 <LogOut size={20} color={COLORS.error} />

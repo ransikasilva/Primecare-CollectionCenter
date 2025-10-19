@@ -18,14 +18,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "3",
+      "buildNumber": "4",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "PrimeCare needs location access to provide accurate pickup locations for medical sample collection.",
         "NSCameraUsageDescription": "PrimeCare needs camera access to scan QR codes for sample verification."
       }
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#4ECDC4"
       },

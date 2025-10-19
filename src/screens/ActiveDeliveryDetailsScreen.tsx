@@ -470,38 +470,39 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
   };
 
   const renderMap = () => {
-    // Calculate map region to fit all markers
-    const allCoordinates = [
-      locationState.collectionCenter,
-      locationState.hospital,
-      ...(locationState.riderLocation ? [locationState.riderLocation] : [])
-    ];
+    try {
+      // Calculate map region to fit all markers
+      const allCoordinates = [
+        locationState.collectionCenter,
+        locationState.hospital,
+        ...(locationState.riderLocation ? [locationState.riderLocation] : [])
+      ];
 
-    const minLat = Math.min(...allCoordinates.map(coord => coord.latitude));
-    const maxLat = Math.max(...allCoordinates.map(coord => coord.latitude));
-    const minLng = Math.min(...allCoordinates.map(coord => coord.longitude));
-    const maxLng = Math.max(...allCoordinates.map(coord => coord.longitude));
+      const minLat = Math.min(...allCoordinates.map(coord => coord.latitude));
+      const maxLat = Math.max(...allCoordinates.map(coord => coord.latitude));
+      const minLng = Math.min(...allCoordinates.map(coord => coord.longitude));
+      const maxLng = Math.max(...allCoordinates.map(coord => coord.longitude));
 
-    const region = {
-      latitude: (minLat + maxLat) / 2,
-      longitude: (minLng + maxLng) / 2,
-      latitudeDelta: Math.max(0.01, (maxLat - minLat) * 1.5),
-      longitudeDelta: Math.max(0.01, (maxLng - minLng) * 1.5),
-    };
+      const region = {
+        latitude: (minLat + maxLat) / 2,
+        longitude: (minLng + maxLng) / 2,
+        latitudeDelta: Math.max(0.01, (maxLat - minLat) * 1.5),
+        longitudeDelta: Math.max(0.01, (maxLng - minLng) * 1.5),
+      };
 
-    return (
-      <View style={styles.mapContainer}>
-        <MapView
-          ref={mapRef}
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          initialRegion={region}
-          showsUserLocation={false}
-          showsMyLocationButton={false}
-          showsTraffic={false}
-          zoomEnabled={true}
-          scrollEnabled={true}
-        >
+      return (
+        <View style={styles.mapContainer}>
+          <MapView
+            ref={mapRef}
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            initialRegion={region}
+            showsUserLocation={false}
+            showsMyLocationButton={false}
+            showsTraffic={false}
+            zoomEnabled={true}
+            scrollEnabled={true}
+          >
           {/* Collection Center Marker */}
           <Marker
             coordinate={locationState.collectionCenter}
@@ -555,6 +556,18 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
         )}
       </View>
     );
+    } catch (error) {
+      console.error('Map rendering error:', error);
+      // Return placeholder if map fails
+      return (
+        <View style={styles.mapContainer}>
+          <View style={[styles.map, { backgroundColor: COLORS.gray100, alignItems: 'center', justifyContent: 'center' }]}>
+            <MapPin size={32} color={COLORS.gray400} />
+            <Text style={{ color: COLORS.textSecondary, marginTop: 8 }}>Map unavailable</Text>
+          </View>
+        </View>
+      );
+    }
   };
 
   const renderSampleInformation = () => {
@@ -843,6 +856,59 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
       onTabPress(tab);
     }
   };
+
+  // Show loading state
+  if (isLoading && !orderData) {
+    return (
+      <MainLayout activeTab="deliveries" onTabPress={handleTabPress}>
+        <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ color: COLORS.textSecondary }}>Loading delivery details...</Text>
+        </View>
+      </MainLayout>
+    );
+  }
+
+  // Show error state if no order data
+  if (!orderData) {
+    return (
+      <MainLayout activeTab="deliveries" onTabPress={handleTabPress}>
+        <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+          <AlertTriangle size={48} color={COLORS.error} />
+          <Text style={{ color: COLORS.textPrimary, fontSize: 18, fontWeight: '600', marginTop: 16 }}>
+            Failed to load delivery
+          </Text>
+          <Text style={{ color: COLORS.textSecondary, textAlign: 'center', marginTop: 8 }}>
+            Unable to load delivery details. Please try again.
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.primary,
+              paddingHorizontal: 24,
+              paddingVertical: 12,
+              borderRadius: 8,
+              marginTop: 24
+            }}
+            onPress={() => {
+              loadOrderData();
+            }}
+          >
+            <Text style={{ color: COLORS.white, fontWeight: '600' }}>Retry</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              paddingVertical: 12,
+              marginTop: 12
+            }}
+            onPress={onBack}
+          >
+            <Text style={{ color: COLORS.primary, fontWeight: '600' }}>Go Back</Text>
+          </TouchableOpacity>
+        </View>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout activeTab="deliveries" onTabPress={handleTabPress}>

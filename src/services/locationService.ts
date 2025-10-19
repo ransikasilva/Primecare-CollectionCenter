@@ -1,5 +1,6 @@
 import apiClient from './apiClient';
 import { ApiResponse } from '../types';
+import * as Location from 'expo-location';
 
 export interface LocationCoordinates {
   lat: number;
@@ -160,42 +161,27 @@ class LocationService {
 
   // Get current location using device GPS
   async getCurrentLocation(): Promise<LocationCoordinates> {
-    return new Promise((resolve, reject) => {
-      // Check if geolocation is available
-      if (!navigator.geolocation) {
-        reject(new Error('Geolocation is not supported by this device'));
-        return;
+    try {
+      // Request location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        throw new Error('Location access denied. Please enable location permissions.');
       }
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          let errorMessage = 'Unable to get your location';
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage = 'Location access denied. Please enable location permissions.';
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = 'Location information unavailable. Please try again.';
-              break;
-            case error.TIMEOUT:
-              errorMessage = 'Location request timed out. Please try again.';
-              break;
-          }
-          reject(new Error(errorMessage));
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 300000, // 5 minutes
-        }
-      );
-    });
+      // Get current position
+      const location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Balanced,
+      });
+
+      return {
+        lat: location.coords.latitude,
+        lng: location.coords.longitude,
+      };
+    } catch (error: any) {
+      console.error('Get current location error:', error);
+      throw new Error(error.message || 'Unable to get your location');
+    }
   }
 
   // Get current location with high accuracy (for registration)

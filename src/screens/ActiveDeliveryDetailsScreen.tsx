@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import orderService from '../services/orderService';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import {
   ArrowLeft,
   Share2,
@@ -107,7 +106,6 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
   const [isLoading, setIsLoading] = useState(true);
   const [qrData, setQrData] = useState<string | null>(null);
   const [timeline, setTimeline] = useState<TimelineItem[]>([]);
-  const mapRef = useRef<MapView>(null);
 
   // Location state management
   const [locationState, setLocationState] = useState<LocationState>({
@@ -176,22 +174,6 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
           estimatedTimeToDelivery: order.timing?.estimated_delivery_time || (order as any).estimated_delivery_time || 'N/A',
         }));
 
-        // Fit map to show both locations when data loads
-        if (mapRef.current && pickupLat && pickupLng && deliveryLat && deliveryLng) {
-          setTimeout(() => {
-            mapRef.current?.fitToCoordinates(
-              [
-                { latitude: pickupLat, longitude: pickupLng },
-                { latitude: deliveryLat, longitude: deliveryLng }
-              ],
-              {
-                edgePadding: { top: 100, right: 50, bottom: 100, left: 50 },
-                animated: true,
-              }
-            );
-          }, 500); // Small delay to ensure map is rendered
-        }
-
         // Build timeline from status history and order timestamps
         const timelineItems = buildTimelineFromOrder(order, statusHistory);
         setTimeline(timelineItems);
@@ -247,23 +229,6 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
               };
 
               console.log('📍 Updated location state with rider:', newState.riderLocation);
-
-              // Update map to show rider location
-              if (mapRef.current) {
-                setTimeout(() => {
-                  mapRef.current?.fitToCoordinates(
-                    [
-                      prev.collectionCenter,
-                      prev.hospital,
-                      { latitude: riderLat, longitude: riderLng }
-                    ],
-                    {
-                      edgePadding: { top: 100, right: 50, bottom: 100, left: 50 },
-                      animated: true,
-                    }
-                  );
-                }, 100);
-              }
 
               return newState;
             });
@@ -470,104 +435,66 @@ const ActiveDeliveryDetailsScreen: React.FC<ActiveDeliveryDetailsScreenProps> = 
   };
 
   const renderMap = () => {
-    try {
-      // Calculate map region to fit all markers
-      const allCoordinates = [
-        locationState.collectionCenter,
-        locationState.hospital,
-        ...(locationState.riderLocation ? [locationState.riderLocation] : [])
-      ];
-
-      const minLat = Math.min(...allCoordinates.map(coord => coord.latitude));
-      const maxLat = Math.max(...allCoordinates.map(coord => coord.latitude));
-      const minLng = Math.min(...allCoordinates.map(coord => coord.longitude));
-      const maxLng = Math.max(...allCoordinates.map(coord => coord.longitude));
-
-      const region = {
-        latitude: (minLat + maxLat) / 2,
-        longitude: (minLng + maxLng) / 2,
-        latitudeDelta: Math.max(0.01, (maxLat - minLat) * 1.5),
-        longitudeDelta: Math.max(0.01, (maxLng - minLng) * 1.5),
-      };
-
-      return (
-        <View style={styles.mapContainer}>
-          <MapView
-            ref={mapRef}
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            initialRegion={region}
-            showsUserLocation={false}
-            showsMyLocationButton={false}
-            showsTraffic={false}
-            zoomEnabled={true}
-            scrollEnabled={true}
-          >
-          {/* Collection Center Marker */}
-          <Marker
-            coordinate={locationState.collectionCenter}
-            title="Collection Center"
-            description="Sample pickup location"
-            anchor={{ x: 0.5, y: 1 }}
-          >
+    // Simple location display without map (map requires native build)
+    return (
+      <View style={styles.mapContainer}>
+        <View style={[styles.map, { backgroundColor: COLORS.primaryUltraLight, padding: SPACING.lg }]}>
+          {/* Collection Center */}
+          <View style={styles.locationRow}>
             <View style={styles.pickupMarker}>
-              <Package size={14} color={COLORS.white} />
+              <Package size={16} color={COLORS.white} />
             </View>
-          </Marker>
-
-          {/* Hospital Marker */}
-          <Marker
-            coordinate={locationState.hospital}
-            title="Hospital"
-            description="Sample delivery destination"
-            anchor={{ x: 0.5, y: 1 }}
-          >
-            <View style={styles.hospitalMarker}>
-              <Building2 size={14} color={COLORS.white} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.locationLabel}>Collection Center</Text>
+              <Text style={styles.locationCoords}>
+                {locationState.collectionCenter.latitude.toFixed(4)}, {locationState.collectionCenter.longitude.toFixed(4)}
+              </Text>
             </View>
-          </Marker>
-
-          {/* Rider Location Marker (if active) */}
-          {locationState.riderLocation && locationState.isRiderLocationActive && (
-            <Marker
-              coordinate={locationState.riderLocation}
-              title="Rider Location"
-              description={`${getRiderInfo().name} - Live tracking`}
-              anchor={{ x: 0.5, y: 0.5 }}
-            >
-              <View style={styles.riderMarker}>
-                <Navigation size={12} color={COLORS.white} />
-              </View>
-            </Marker>
-          )}
-        </MapView>
-
-        {/* Time remaining overlay */}
-        <View style={styles.timeRemainingBadge}>
-          <Text style={styles.timeRemainingText}>{timeRemaining}</Text>
-        </View>
-
-        {/* Live tracking indicator */}
-        {locationState.isRiderLocationActive && (
-          <View style={styles.liveTrackingBadge}>
-            <View style={styles.liveIndicator} />
-            <Text style={styles.liveTrackingText}>Live tracking</Text>
           </View>
-        )}
+
+          {/* Rider Location (if active) */}
+          {locationState.riderLocation && locationState.isRiderLocationActive && (
+            <View style={[styles.locationRow, { marginTop: SPACING.md }]}>
+              <View style={styles.riderMarker}>
+                <Navigation size={16} color={COLORS.white} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.locationLabel}>Rider Location (Live)</Text>
+                <Text style={styles.locationCoords}>
+                  {locationState.riderLocation.latitude.toFixed(4)}, {locationState.riderLocation.longitude.toFixed(4)}
+                </Text>
+              </View>
+            </View>
+          )}
+
+          {/* Hospital */}
+          <View style={[styles.locationRow, { marginTop: SPACING.md }]}>
+            <View style={styles.hospitalMarker}>
+              <Building2 size={16} color={COLORS.white} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.locationLabel}>Hospital</Text>
+              <Text style={styles.locationCoords}>
+                {locationState.hospital.latitude.toFixed(4)}, {locationState.hospital.longitude.toFixed(4)}
+              </Text>
+            </View>
+          </View>
+
+          {/* Time remaining */}
+          <View style={[styles.timeRemainingBadge, { position: 'relative', marginTop: SPACING.lg, alignSelf: 'flex-end' }]}>
+            <Text style={styles.timeRemainingText}>{timeRemaining}</Text>
+          </View>
+
+          {/* Live tracking indicator */}
+          {locationState.isRiderLocationActive && (
+            <View style={[styles.liveTrackingBadge, { position: 'relative', marginTop: SPACING.sm }]}>
+              <View style={styles.liveIndicator} />
+              <Text style={styles.liveTrackingText}>Live tracking</Text>
+            </View>
+          )}
+        </View>
       </View>
     );
-    } catch (error) {
-      console.error('Map rendering error:', error);
-      // Return placeholder if map fails
-      return (
-        <View style={styles.mapContainer}>
-          <View style={[styles.map, { backgroundColor: COLORS.gray100, alignItems: 'center', justifyContent: 'center' }]}>
-            <MapPin size={32} color={COLORS.gray400} />
-            <Text style={{ color: COLORS.textSecondary, marginTop: 8 }}>Map unavailable</Text>
-          </View>
-        </View>
-      );
-    }
   };
 
   const renderSampleInformation = () => {
@@ -1594,6 +1521,22 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontWeight: '500',
     textAlign: 'center',
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+  },
+  locationLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    marginBottom: 4,
+  },
+  locationCoords: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    fontFamily: 'monospace',
   },
 });
 
